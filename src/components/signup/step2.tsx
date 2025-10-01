@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { BackgroundBeams } from "../ui/shadcn-io/background-beams";
 import { FaLock } from "react-icons/fa";

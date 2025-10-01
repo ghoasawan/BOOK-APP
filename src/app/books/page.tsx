@@ -1,0 +1,34 @@
+"use client";
+import React from "react";
+import Card from '../../components/card/card'
+
+
+export const books = Array.from({ length: 100 }, (_, i) => ({
+  name: `Book Title ${i + 1}`,
+  rating: (Math.random() * 5).toFixed(1), // random rating 0.0 - 5.0
+  genre: ["Romance", "Thriller", "Mystery", "Fantasy", "Sci-Fi", "Non-Fiction"][
+    Math.floor(Math.random() * 6)
+  ],
+  description:
+    "This is a placeholder description for Book " +
+    (i + 1) +
+    ". Replace it with the actual summary or blurb of the book. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  author: `Author ${i + 1}`,
+  bookCover: `https://picsum.photos/200/300?random=${i + 1}`, // random placeholder images
+}));
+
+
+
+export default function Books() {
+  return (
+    <>
+        {
+            books.map((data, index)=>{
+                return (<div key={index}>
+                    <Card title={data.name} rating={data.rating} author={data.author}  bookCover={data.bookCover}/>
+                </div> )
+            })
+        }
+    </>
+  )
+}
