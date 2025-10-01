@@ -2,13 +2,14 @@
 
 import React from "react";
 import { CiSearch } from "react-icons/ci";
+import Link from "next/link";
 
 export default function Header() {
   return (
-    <div className="h-[80px] px-[200px] w-full bg-black text-white z-10 ">
+    <div className="h-[80px] px-[200px] w-full bg-black text-white z-100 ">
       <div className="grid grid-cols-12 h-full">
         <div className="col-span-6 flex justify-center items-start flex-col text-[30px] font-bold">
-          BOOKSHELF
+         <Link href="/">BOOKSHELF</Link>
         </div>
         <div className="col-span-6 flex gap-[20px] items-center justify-end">
           <div className="bg-gray-300 h-[40px] rounded-2xl flex justify-center items-center gap-[10px] px-4 text-black hover:bg-purple-200">

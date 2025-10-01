@@ -1,59 +1,67 @@
-"use client"
+"use client";
 
-import * as React from 'react';
-import AspectRatio from '@mui/joy/AspectRatio';
-import Button from '@mui/joy/Button';
-import Card from '@mui/joy/Card';
-import CardContent from '@mui/joy/CardContent';
-import IconButton from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
-import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
-import Rating from '@mui/material/Rating';
+import React from "react";
+import { BookmarkAddOutlined } from "@mui/icons-material";
+import Rating from "@mui/material/Rating";
+import { motion } from "framer-motion";
 
-
-interface bookInterface{
-    title:string,
-    rating:number,
-    author:string,
-    bookCover:string
+interface bookInterface {
+  title: string;
+  rating: number;
+  author: string;
+  bookCover: string;
 }
-export default function BasicCard({title,rating,  author, bookCover}:bookInterface) {
+
+export default function BasicCard({
+  title,
+  rating,
+  author,
+  bookCover,
+}: bookInterface) {
   return (
-    <Card sx={{ width: 320 }}>
-      <div>
-        <Typography level="title-lg">{title}</Typography>
-        <IconButton
-          aria-label="bookmark Bahamas Islands"
-          variant="plain"
-          color="neutral"
-          size="sm"
-          sx={{ position: 'absolute', top: '0.875rem', right: '0.5rem' }}
-        >
-          <BookmarkAdd />
-        </IconButton>
+    <motion.div className="relative w-[320px] bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 px-[20px] cursor-pointer"
+    whileHover={{
+    scale: 1.05, // Slightly enlarges
+    y: -5,       // Moves upward
+    boxShadow: "0px 8px 25px rgba(0,0,0,0.15)", // Adds stronger shadow
+  }}
+  transition={{
+    type: "spring",
+    stiffness: 300,
+    damping: 15,
+  }}>
+      {/* Header */}
+      <div className="p-4 flex justify-between items-start">
+        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+        <button className="absolute top-3 right-3 text-gray-500 hover:text-purple-600">
+          <BookmarkAddOutlined />
+        </button>
       </div>
-      <AspectRatio minHeight="120px" maxHeight="200px">
+
+      {/* Image */}
+      <div className="w-full h-[200px] flex justify-center items-center bg-gray-100">
         <img
           src={bookCover}
-         
-          alt=""
+          alt={title}
+          className="object-cover w-full h-full"
         />
-      </AspectRatio>
-      <CardContent orientation="horizontal">
+      </div>
+
+      {/* Footer */}
+      <div className="p-4 flex items-center justify-between">
         <div>
-          <Typography level="body-xs">Author:{author}</Typography>
-          <Rating name="half-rating-read"  value={rating} precision={0.5} readOnly />
+          <p className="text-sm text-gray-600">Author: {author}</p>
+          <Rating
+            name="half-rating-read"
+            value={rating}
+            precision={0.5}
+            readOnly
+          />
         </div>
-        <Button
-          variant="solid"
-          size="md"
-          color="primary"
-          aria-label="Explore Bahamas Islands"
-          sx={{ ml: 'auto', alignSelf: 'center', fontWeight: 600 }}
-        >
+        <button className="ml-auto px-4 py-2 bg-purple-700 text-white text-sm font-semibold rounded-lg hover:bg-purple-800 transition cursor-pointer">
           View
-        </Button>
-      </CardContent>
-    </Card>
+        </button>
+      </div>
+    </motion.div>
   );
 }
