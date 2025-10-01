@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Card from '../../components/card/card'
+import Card from '../components/card/card'
 
 
 export const books = Array.from({ length: 100 }, (_, i) => ({

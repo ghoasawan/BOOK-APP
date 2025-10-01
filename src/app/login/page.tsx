@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { BackgroundBeams } from "../../components/ui/shadcn-io/background-beams";
+import { BackgroundBeams } from "../components/ui/shadcn-io/background-beams/index";
 import { FaLock } from "react-icons/fa";
 import Button from "@mui/material/Button";
 import Link from "next/link";
