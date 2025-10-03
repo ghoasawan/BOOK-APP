@@ -1,15 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import Link from "next/link";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const [Path, setPath]=useState("")
   const router = useRouter();
   const { data: session, status } = useSession();
+  const path =usePathname();
+
+  useEffect(()=>{setPath(path)},[path])
 
   console.log("session", session);
   console.log("status", status);
@@ -18,6 +23,10 @@ export default function Header() {
     router.push("/signup");
   }
 
+  function handleAddBook()
+  {
+    router.push('/addBook')
+  }
   function handleLogin()
   {
     router.push('/login')
@@ -52,12 +61,24 @@ export default function Header() {
             ""
           )}
           {session && status === "authenticated" ? (
-            <div onClick={handleLogout} className="h-[40px] bg-purple-900 w-[40px] rounded-full flex items-center justify-center text-[20px] cursor-pointer font-semibold">
+            <div title="logout" onClick={handleLogout} className="h-[40px] bg-purple-900 w-[40px] rounded-full flex items-center justify-center text-[20px] cursor-pointer font-semibold">
               {(session?.user?.email)[0].toUpperCase()}
             </div>
           ) : (
             ""
-          )}
+          )
+            
+          }
+
+          {
+            (Path==='/books') &&  <Button
+                onClick={handleAddBook}
+                variant="contained"
+                className="!bg-purple-900"
+              >
+                Add Books
+              </Button>
+          }
           {!(session && status === "authenticated") ? (
             <>
               <Button
@@ -74,10 +95,13 @@ export default function Header() {
               >
                 Login
               </Button>
+
+            
             </>
           ) : (
             ""
-          )}
+          )
+          }
         </div>
       </div>
     </div>

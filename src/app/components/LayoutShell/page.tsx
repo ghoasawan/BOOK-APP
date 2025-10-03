@@ -10,7 +10,7 @@ interface layoutInterface {
 
 export default function LayoutShell({ children }: layoutInterface) {
 
-  const noLayoutPath = ['/signup', '/login']
+  const noLayoutPath = ['/signup', '/login','/addBook']
   const pathname= usePathname();
   const isheaderVisible= noLayoutPath.includes(pathname);
   return (

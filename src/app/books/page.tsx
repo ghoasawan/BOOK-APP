@@ -1,55 +1,102 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/card/card";
 import Pagination from "@mui/material/Pagination";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
-export const books = Array.from({ length: 40 }, (_, i) => ({
-  name: `Book Title ${i + 1}`,
-  rating: (Math.random() * 5).toFixed(1), // random rating 0.0 - 5.0
-  genre: ["Romance", "Thriller", "Mystery", "Fantasy", "Sci-Fi", "Non-Fiction"][
-    Math.floor(Math.random() * 6)
-  ],
-  description:
-    "This is a placeholder description for Book " +
-    (i + 1) +
-    ". Replace it with the actual summary or blurb of the book. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  author: `Author ${i + 1}`,
-  bookCover: `https://picsum.photos/200/300?random=${i + 1}`, // random placeholder images
-}));
+import axios from "axios";
+import { usePathname } from "next/navigation";
+import {  useDispatch} from "react-redux";
+import { showLoader, hideLoader } from "../redux/reducers/loaderSlice";
+import Loader from "../components/Loader/loader";
 
 export default function Books() {
+  const dispatch = useDispatch()
+  const [pages, setPages] = useState(1);
+  const [totalPage, setTotalPages] = useState(0);
+  const [books, setBooks] = useState([]);
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const path=usePathname();
 
-  const {data:session, status}=useSession();
-  const router=useRouter();
+  console.log("path",path)
 
 
+  useEffect(() => {
+    async function getData() {
+      dispatch(showLoader());
+        setLoading(true);
+      try {
+        const response = await axios.get("http://localhost:3000/api/books", {
+        params: { page: pages, limit: 9 },
+      });
+      console.log("response", response);
+      setTotalPages(response.data.totalPages);
+      setBooks(response.data.data);
+      } catch (error) {
+        console.log(error)
+      }finally{
+        dispatch(hideLoader())
+        setLoading(false);
+      }
+    }
+
+    getData();
+  }, [pages, totalPage]);
+
+
+  useEffect(() => {
+  window.scrollTo(0, 0);
+},[]);
   useEffect(()=>{
-
-    if(!(session && status==="authenticated"))
-      router.push('/');
-  },[session])
+    if(!(session))
+    {
+      router.push('/')
+    }
+  },[])
   return (
     <>
-      <div className="w-full flex justify-center items-center gap-[50px] flex-wrap  py-[100px] px-[100px] bg-black">
+    {(loading)? (<Loader/>):(<div className="min-h-[100vh] bg-black flex flex-col justify-center items-end">
+      <div className="w-full  flex justify-center items-center gap-[50px] flex-wrap  py-[100px] px-[100px] ">
         {books.map((data, index) => {
           return (
             <div key={index}>
               <Card
-                title={data.name}
+                title={data.title}
                 rating={data.rating}
                 author={data.author}
-                bookCover={data.bookCover}
+                bookCover={data.coverPhoto}
               />
             </div>
           );
         })}
       </div>
-      <div className="flex justify-end items-center px-[100px]">
-        <Pagination count={10} variant="outlined" shape="rounded" />
+      <div className="flex justify-end items-center px-[100px] mb-[20px]">
+        <Pagination
+          count={totalPage}
+          page={pages}
+          onChange={(event, value) => setPages(value)}
+          variant="outlined"
+          shape="rounded"
+          sx={{
+            "& .MuiPaginationItem-root": {
+              color: "white", // default text color
+              borderColor: "gray",
+              backgroundColor:"gray" // border for outlined
+            },
+            "& .MuiPaginationItem-root.Mui-selected": {
+              backgroundColor: "white", // active page background
+              color: "black", // active page text
+            },
+            "& .MuiPaginationItem-root:hover": {
+              backgroundColor: "lightgray", // hover effect
+            },
+          }}
+        />
       </div>
+    </div>)}
     </>
   );
 }
