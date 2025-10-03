@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Card from "../components/card/card";
 import Pagination from "@mui/material/Pagination";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const books = Array.from({ length: 40 }, (_, i) => ({
   name: `Book Title ${i + 1}`,
@@ -19,6 +21,16 @@ export const books = Array.from({ length: 40 }, (_, i) => ({
 }));
 
 export default function Books() {
+
+  const {data:session, status}=useSession();
+  const router=useRouter();
+
+
+  useEffect(()=>{
+
+    if(!(session && status==="authenticated"))
+      router.push('/');
+  },[session])
   return (
     <>
       <div className="w-full flex justify-center items-center gap-[50px] flex-wrap  py-[100px] px-[100px] bg-black">

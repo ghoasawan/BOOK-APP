@@ -2,16 +2,21 @@
 
 import React from "react";
 import Header from "../header/header";
+import { usePathname } from "next/navigation";
 
 interface layoutInterface {
   children: React.ReactNode;
 }
 
 export default function LayoutShell({ children }: layoutInterface) {
+
+  const noLayoutPath = ['/signup', '/login']
+  const pathname= usePathname();
+  const isheaderVisible= noLayoutPath.includes(pathname);
   return (
     <div className="min-h-screen flex flex-col">
       {/* Fixed Header */}
-      <Header />
+      { !isheaderVisible && <Header/>}
 
       {/* Page content area */}
       <main className="flex-1">
