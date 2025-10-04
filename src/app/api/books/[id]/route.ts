@@ -57,7 +57,7 @@ export async function DELETE(
 
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }>}
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -69,7 +69,7 @@ export async function GET(
       );
     }
 
-    const { id } = await context.params;
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(
