@@ -56,18 +56,24 @@ export default function Books() {
       router.push('/')
     }
   },[])
+
+  function handleBook(id)
+  {
+    router.push(`/books/${id}`)
+  }
   return (
     <>
     {(loading)? (<Loader/>):(<div className="min-h-[100vh] bg-black flex flex-col justify-center items-end">
       <div className="w-full  flex justify-center items-center gap-[50px] flex-wrap  py-[100px] px-[100px] ">
         {books.map((data, index) => {
           return (
-            <div key={index}>
+            <div key={index} onClick={()=>{handleBook(data.id)}}>
               <Card
                 title={data.title}
                 rating={data.rating}
                 author={data.author}
                 bookCover={data.coverPhoto}
+                
               />
             </div>
           );

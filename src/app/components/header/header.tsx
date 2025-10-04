@@ -9,12 +9,14 @@ import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
-  const [Path, setPath]=useState("")
+  const [Path, setPath] = useState("");
   const router = useRouter();
   const { data: session, status } = useSession();
-  const path =usePathname();
+  const path = usePathname();
 
-  useEffect(()=>{setPath(path)},[path])
+  useEffect(() => {
+    setPath(path);
+  }, [path]);
 
   console.log("session", session);
   console.log("status", status);
@@ -23,21 +25,16 @@ export default function Header() {
     router.push("/signup");
   }
 
-  function handleAddBook()
-  {
-    router.push('/addBook')
+  function handleAddBook() {
+    router.push("/addBook");
   }
-  function handleLogin()
-  {
-    router.push('/login')
+  function handleLogin() {
+    router.push("/login");
   }
- async function handleLogout()
-  {
-    await signOut({redirect:false})
-    router.push('/')
+  async function handleLogout() {
+    await signOut({ redirect: false });
+    router.push("/");
   }
-
-
 
   return (
     <div className="h-[80px] px-[200px] w-full bg-black text-white z-100 ">
@@ -61,24 +58,26 @@ export default function Header() {
             ""
           )}
           {session && status === "authenticated" ? (
-            <div title="logout" onClick={handleLogout} className="h-[40px] bg-purple-900 w-[40px] rounded-full flex items-center justify-center text-[20px] cursor-pointer font-semibold">
-              {(session?.user?.email)[0].toUpperCase()}
+            <div
+              title="logout"
+              onClick={handleLogout}
+              className=" hover:outline-purple-50  h-[40px] bg-purple-900 w-[40px] rounded-full flex items-center justify-center text-[20px] cursor-pointer font-semibold"
+            >
+              {session?.user?.email[0].toUpperCase()}
             </div>
           ) : (
             ""
-          )
-            
-          }
+          )}
 
-          {
-            (Path==='/books') &&  <Button
-                onClick={handleAddBook}
-                variant="contained"
-                className="!bg-purple-900"
-              >
-                Add Books
-              </Button>
-          }
+          {Path === "/books" && (
+            <Button
+              onClick={handleAddBook}
+              variant="contained"
+              className="!bg-purple-900"
+            >
+              Add Books
+            </Button>
+          )}
           {!(session && status === "authenticated") ? (
             <>
               <Button
@@ -95,13 +94,10 @@ export default function Header() {
               >
                 Login
               </Button>
-
-            
             </>
           ) : (
             ""
-          )
-          }
+          )}
         </div>
       </div>
     </div>

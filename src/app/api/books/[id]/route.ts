@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { prisma } from "../../../lib/prisma";
 
-
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -27,19 +26,18 @@ export async function DELETE(
       );
     }
 
+    const ID= Number(id);
     const existingBook = await prisma.book.findUnique({
-      where: { id },
+      where: { id:ID },
     });
 
     if (!existingBook) {
-      return NextResponse.json(
-        { error: "Book not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
 
+    
     await prisma.book.delete({
-      where: { id },
+      where: { id:ID },
     });
 
     return NextResponse.json(
@@ -48,6 +46,53 @@ export async function DELETE(
     );
   } catch (error) {
     console.error("Error deleting book:", error);
+    return NextResponse.json(
+      { error: "Failed to delete book" },
+      { status: 500 }
+    );
+  }
+}
+
+
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized access" },
+        { status: 401 }
+      );
+    }
+
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Book ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const ID = Number(id);
+    const existingBook = await prisma.book.findUnique({
+      where: { id:ID },
+    });
+
+    if (!existingBook) {
+      return NextResponse.json({ error: "Book not Found" }, { status: 404 });
+    } else {
+      return NextResponse.json(
+        { message: "Book Found", data: existingBook },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.error("server error", error);
     return NextResponse.json(
       { error: "Failed to delete book" },
       { status: 500 }

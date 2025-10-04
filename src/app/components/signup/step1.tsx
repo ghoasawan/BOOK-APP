@@ -51,7 +51,7 @@ export default function Step1({ formData, setFormData }) {
 
 
   return (
-    <div className="min-h-[100vh] flex justify-center items-center">
+    <div className="min-h-[calc(100vh-100px)] flex  justify-center items-center ">
       <div className="w-[500px]  flex justify-center items-center flex-col z-10 gap-[20px] ">
         <FaLock className="text-[50px] text-gray-600" />
         <p className="text-[30px] font-semibold text-gray-600">Signup</p>

@@ -3,6 +3,7 @@
 import React from "react";
 import Header from "../header/header";
 import { usePathname } from "next/navigation";
+import Footer from '../footer/page'
 
 interface layoutInterface {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface layoutInterface {
 
 export default function LayoutShell({ children }: layoutInterface) {
 
-  const noLayoutPath = ['/signup', '/login','/addBook']
+  const noLayoutPath = ['/login','/signup','/addBook']
   const pathname= usePathname();
   const isheaderVisible= noLayoutPath.includes(pathname);
   return (
@@ -22,6 +23,8 @@ export default function LayoutShell({ children }: layoutInterface) {
       <main className="flex-1">
         {children}
       </main>
+
+      <Footer/>
     </div>
   );
 }

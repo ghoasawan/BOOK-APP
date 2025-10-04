@@ -61,7 +61,7 @@ export default function Login() {
 
   })
   return (
-    <div className="min-h-[100vh] flex justify-center items-center">
+    <div className="min-h-[calc(100vh-100px)] flex justify-center items-center ">
       <div className="w-[500px]  flex justify-center items-center flex-col z-10 gap-[20px] ">
         <FaLock className="text-[50px] text-gray-600" />
         <p className="text-[30px] font-semibold text-gray-600">Login</p>
@@ -88,6 +88,7 @@ export default function Login() {
 
         
           <Button
+            loading={formik.isSubmitting}
             type="submit"
             variant="contained"
             className="w-full !bg-purple-800 !mb-[10px] "
@@ -96,12 +97,12 @@ export default function Login() {
           </Button>
           <div className="flex justify-center">
             <span className="text-[13px] text-gray-600">
-              Already have an Account?{" "}
+              Not a member?{" "}
               <Link
-                href="/login"
+                href="/signup"
                 className="text-[14px] hover:underline text-purple-900 "
               >
-                Login
+                Signup
               </Link>
             </span>
           </div>
