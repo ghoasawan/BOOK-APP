@@ -7,6 +7,12 @@ A modern, full-stack book management application built with Next.js, featuring u
 **Deployment Link:** [Add your deployment URL here]
 *Note: Please update this with your actual deployment URL (Vercel, Netlify, etc.)*
 
+### Quick Deploy on Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/Book-App)
+
+**Deployment Guide:** See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+
 ## ✨ Features Implemented
 
 ### 🔐 Authentication System
