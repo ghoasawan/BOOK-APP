@@ -9,9 +9,7 @@ import Badge from "@mui/material/Badge";
 import { useWizard } from "react-use-wizard";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import Image from "next/image";
-import { imageConfigDefault } from "next/dist/shared/lib/image-config";
-import { Span } from "next/dist/trace";
+
 
 export default function Step1({ formData, setFormData }) {
   const fileRef = useRef(null);
@@ -51,13 +49,13 @@ export default function Step1({ formData, setFormData }) {
 
 
   return (
-    <div className="min-h-[calc(100vh-100px)] flex  justify-center items-center ">
-      <div className="w-[500px]  flex justify-center items-center flex-col z-10 gap-[20px] ">
-        <FaLock className="text-[50px] text-gray-600" />
-        <p className="text-[30px] font-semibold text-gray-600">Signup</p>
+    <div className="min-h-[calc(100vh-100px)] flex justify-center items-center px-4 py-6 sm:px-6 md:px-8">
+      <div className="w-full max-w-[90%] sm:max-w-md md:max-w-lg lg:max-w-[500px] flex justify-center items-center flex-col z-10 gap-4 sm:gap-5 md:gap-[20px]">
+        <FaLock className="text-[40px] sm:text-[45px] md:text-[50px] text-gray-600" />
+        <p className="text-[24px] sm:text-[27px] md:text-[30px] font-semibold text-gray-600">Signup</p>
         <form
           onSubmit={formik.handleSubmit}
-          className="p-8 rounded-2xl  w-full  space-y-4 flex flex-col justify-center items-center"
+          className="p-6 sm:p-7 md:p-8 rounded-2xl w-full space-y-3 sm:space-y-4 flex flex-col justify-center items-center"
         >
           <Badge
             color="secondary"
@@ -66,7 +64,7 @@ export default function Step1({ formData, setFormData }) {
             className="cursor-pointer"
             onClick={handleFile}
           >
-            <div className="w-[150px] h-[150px] border-1 border-dashed rounded-full border-gray-500 overflow-hidden">
+            <div className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[150px] md:h-[150px] border-1 border-dashed rounded-full border-gray-500 overflow-hidden">
               { userPic && (<img src={userPic} alt="" srcset="" className=" h-[100%] w-[100%] object-cover " /> )}
             </div>
             <input
@@ -88,27 +86,27 @@ export default function Step1({ formData, setFormData }) {
               }}
             />
           </Badge>
-          { (formik.errors.profilePic && formik.touched )? <span className="text-[14px] text-red-600">{formik.errors.profilePic}</span>:"" }
+          { (formik.errors.profilePic && formik.touched )? <span className="text-[12px] sm:text-[13px] md:text-[14px] text-red-600">{formik.errors.profilePic}</span>:"" }
           <Button
             type="submit"
             variant="contained"
-            className="w-full !bg-purple-800 !mb-[10px]"
+            className="w-full !bg-purple-800 !mb-[10px] text-sm sm:text-base"
           >
             Next
           </Button>
           <Button
             variant="contained"
-            className="w-full !bg-purple-800 !mb-[10px]"
+            className="w-full !bg-purple-800 !mb-[10px] text-sm sm:text-base"
             onClick={()=>{nextStep()}}
           >
             Skip
           </Button>
           <div className="flex justify-center">
-            <span className="text-[13px] text-gray-600">
+            <span className="text-[12px] sm:text-[13px] text-gray-600">
               Already have an Account?{" "}
               <Link
                 href="/login"
-                className="text-[14px] hover:underline text-purple-900"
+                className="text-[13px] sm:text-[14px] hover:underline text-purple-900"
               >
                 Login
               </Link>
