@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BackgroundBeams } from "../ui/shadcn-io/background-beams";
 import { FaLock } from "react-icons/fa";
 import Button from "@mui/material/Button";
@@ -10,6 +10,7 @@ import * as Yup from "yup";
 import { useWizard } from "react-use-wizard";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import AlertDialog from "../Prompt/page";
 
 interface formValues {
   firstName: string;
@@ -27,6 +28,9 @@ interface step2Props {
 export default function Step2({ formData, setFormData }: step2Props) {
   const { previousStep } = useWizard();
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+
   const SignupSchema = Yup.object().shape({
     firstName: Yup.string()
       .required("First name is required")
@@ -61,28 +65,36 @@ export default function Step2({ formData, setFormData }: step2Props) {
     initialValues,
     validationSchema: SignupSchema,
     onSubmit: async (values) => {
-      setFormData((prev: object) => ({ ...prev, ...values }));
-      const newFormData = { ...formData, ...values };
+  try {
+    const newFormData = { ...formData, ...values };
+    setFormData(newFormData);
 
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/api/signup",
-          newFormData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response) {
-          console.log(response);
-        }
-      } catch (error) {
-        console.error("Cnot Post the request", error);
+    const response = await axios.post(
+      "http://localhost:3000/api/signup",
+      newFormData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
+    );
 
+    if (response.status === 200 || response.status === 201) {
       router.push("/login");
-    },
+    }
+  } catch (error: any) {
+    console.error("Cannot post the request:", error);
+
+    if (error.response) {
+      setError(error.response.data.error || "Something went wrong");
+      setOpen(true);
+    } else {
+      setError("Network error or server is not responding");
+      setOpen(true);
+    }
+  }
+}
+
   });
 
   useEffect(() => {
@@ -91,9 +103,18 @@ export default function Step2({ formData, setFormData }: step2Props) {
 
   return (
     <div className="flex justify-center items-center min-h-[calc(100vh-100px)] pt-[30px] sm:pt-[35px] md:pt-[40px] px-4 sm:px-6 md:px-8 pb-6">
+      {error ? (
+        <>
+          <AlertDialog open={open} setOpen={setOpen} data={error} />
+        </>
+      ) : (
+        ""
+      )}
       <div className="w-full max-w-[90%] sm:max-w-md md:max-w-lg lg:max-w-[500px] flex justify-center items-center flex-col z-10 gap-4 sm:gap-5 md:gap-[20px]">
         <FaLock className="text-[40px] sm:text-[45px] md:text-[50px] text-gray-600" />
-        <p className="text-[24px] sm:text-[27px] md:text-[30px] font-semibold text-gray-600">Signup</p>
+        <p className="text-[24px] sm:text-[27px] md:text-[30px] font-semibold text-gray-600">
+          Signup
+        </p>
         <form
           className="p-6 sm:p-7 md:p-8 rounded-2xl w-full"
           onSubmit={formik.handleSubmit}
@@ -189,11 +210,12 @@ export default function Step2({ formData, setFormData }: step2Props) {
           </div>
 
           <Button
+            loading={formik.isSubmitting}
             type="submit"
             variant="contained"
             disabled={!(formik.isValid && formik.dirty) || formik.isSubmitting}
             className={`w-full !bg-purple-800 !mb-[10px] !mt-[15px] text-sm sm:text-base
-              disabled:!bg-gray-300  disabled:!cursor-not-allowed `}
+              disabled:!bg-gray-300  disabled:!cursor-not-allowed !text-white`}
           >
             SignUp
           </Button>
