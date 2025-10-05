@@ -31,7 +31,7 @@ export default function Login() {
   
       email: Yup.string()
         .required("Email is required")
-        .email("Invalid email format"),
+        .email("Invalid email format must be forexample@gmail.com"),
   
       password: Yup.string()
         .required("Password is required")
@@ -75,6 +75,7 @@ export default function Login() {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.email}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             { (formik.errors.email && formik.touched.email) ? (<span className="text-red-500 text-xs sm:text-sm block mt-1">{formik.errors.email}</span>):""}
           </div>
@@ -87,6 +88,7 @@ export default function Login() {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.password}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             { (formik.errors.password && formik.touched.password) ? (<span className="text-red-500 text-xs sm:text-sm block mt-1">{formik.errors.password}</span>):""}
           </div>
