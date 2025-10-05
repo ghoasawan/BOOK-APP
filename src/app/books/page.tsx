@@ -60,6 +60,7 @@ export default function Books() {
   function handleBook(id)
   {
     router.push(`/books/${id}`)
+    
   }
   return (
     <>

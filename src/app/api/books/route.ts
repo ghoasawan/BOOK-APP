@@ -9,16 +9,24 @@ export async function GET(req: NextRequest) {
 
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
+     const searchQuery = searchParams.get("search") || "";
 
     const skip = (page - 1) * limit;
+     const whereClause = searchQuery
+      ? {
+          title: {
+            contains: searchQuery,
+            mode: "insensitive" as const, // Case-insensitive search
+          },
+        }
+      : {};
 
-    // Fetch paginated books
     const books = await prisma.book.findMany({
+      where:whereClause,
       skip,
       take: limit,
     });
 
-    // Count total books for frontend pagination
     const totalBooks = await prisma.book.count();
     const totalPages = Math.ceil(totalBooks / limit);
 
@@ -62,7 +70,6 @@ export async function POST(req: NextRequest) {
     const description = formData.get("description") as string;
     const coverPhoto = formData.get("coverPhoto") as File | null;
 
-    // Validation
     if (!title || !author || !genre) {
       return NextResponse.json(
         { error: "Title, author, and genre are required" },
@@ -99,7 +106,7 @@ export async function POST(req: NextRequest) {
         rating: rating ? parseFloat(rating) : null,
         pages: pages ? parseInt(pages) : null,
         description: description?.trim() || null,
-        coverPhoto: coverPhotoUrl, // string (URL or base64)
+        coverPhoto: coverPhotoUrl, 
       },
     });
 
