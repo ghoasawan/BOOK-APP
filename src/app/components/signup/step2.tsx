@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -34,15 +35,17 @@ export default function Step2({ formData, setFormData }: step2Props) {
   const SignupSchema = Yup.object().shape({
     firstName: Yup.string()
       .required("First name is required")
-      .min(2, "First name must be at least 2 characters"),
+      .min(2, "First name must be at least 2 characters")
+      .matches(/^[A-Za-z]+$/, "First name should contain only letters"),
 
     lastName: Yup.string()
       .required("Last name is required")
-      .min(2, "Last name must be at least 2 characters"),
+      .min(2, "Last name must be at least 2 characters")
+      .matches(/^[A-Za-z]+$/, "Last name should contain only letters"),
 
     email: Yup.string()
       .required("Email is required")
-      .email("Invalid email format"),
+      .email("Invalid email format must be forwxample@gmail.com"),
 
     password: Yup.string()
       .required("Password is required")
@@ -50,7 +53,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
 
     confirmPassword: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
+      .oneOf([Yup.ref("password")], "Passwords must match"),
   });
 
   const initialValues: formValues = {
@@ -65,36 +68,35 @@ export default function Step2({ formData, setFormData }: step2Props) {
     initialValues,
     validationSchema: SignupSchema,
     onSubmit: async (values) => {
-  try {
-    const newFormData = { ...formData, ...values };
-    setFormData(newFormData);
+      try {
+        const newFormData = { ...formData, ...values };
+        setFormData(newFormData);
 
-    const response = await axios.post(
-      "http://localhost:3000/api/signup",
-      newFormData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        const response = await axios.post(
+          "http://localhost:3000/api/signup",
+          newFormData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.status === 200 || response.status === 201) {
+          router.push("/login");
+        }
+      } catch (error: any) {
+        console.error("Cannot post the request:", error);
+
+        if (error.response) {
+          setError(error.response.data.error || "Something went wrong");
+          setOpen(true);
+        } else {
+          setError("Network error or server is not responding");
+          setOpen(true);
+        }
       }
-    );
-
-    if (response.status === 200 || response.status === 201) {
-      router.push("/login");
-    }
-  } catch (error: any) {
-    console.error("Cannot post the request:", error);
-
-    if (error.response) {
-      setError(error.response.data.error || "Something went wrong");
-      setOpen(true);
-    } else {
-      setError("Network error or server is not responding");
-      setOpen(true);
-    }
-  }
-}
-
+    },
   });
 
   useEffect(() => {
@@ -127,6 +129,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.firstName}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             {formik.errors.firstName && formik.touched.firstName ? (
               <span className="text-[11px] sm:text-[12px] text-red-500 block mt-1">
@@ -163,6 +166,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.email}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             {formik.errors.email && formik.touched.email ? (
               <span className="text-[11px] sm:text-[12px] text-red-500 block mt-1">
@@ -181,6 +185,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.password}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             {formik.errors.password && formik.touched.password ? (
               <span className="text-[11px] sm:text-[12px] text-red-500 block mt-1">
@@ -199,6 +204,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:border-purple-600 hover:border-purple-600 outline-none"
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
             />
             {formik.errors.confirmPassword && formik.touched.confirmPassword ? (
               <span className="text-[11px] sm:text-[12px] text-red-500 block mt-1">
@@ -213,9 +219,8 @@ export default function Step2({ formData, setFormData }: step2Props) {
             loading={formik.isSubmitting}
             type="submit"
             variant="contained"
-            disabled={!(formik.isValid && formik.dirty) || formik.isSubmitting}
-            className={`w-full !bg-purple-800 !mb-[10px] !mt-[15px] text-sm sm:text-base
-              disabled:!bg-gray-300  disabled:!cursor-not-allowed !text-white`}
+            disabled={!formik.dirty || formik.isSubmitting}
+            className={`w-full !bg-purple-800 !mb-[10px] !mt-[15px] text-sm sm:text-base`}
           >
             SignUp
           </Button>
