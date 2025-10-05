@@ -10,10 +10,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 interface AlertDialogInterface {
   open: boolean;
   setOpen: (open: boolean) => void;
-  data?: string;
+  error?: string;
+  message?:string
 }
 
-export default function AlertDialog({ open, setOpen, data }: AlertDialogInterface) {
+export default function AlertDialog({ open, setOpen, error, message }: AlertDialogInterface) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -26,13 +27,13 @@ export default function AlertDialog({ open, setOpen, data }: AlertDialogInterfac
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {data ? data : "Create Account or Login first"}
+        {error ? error : "Create Account or Login first"}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {data
-            ? "Please change the email as this email is already taken."
+          {error
+            ? message
             : "You are not logged in. Please log in or create an account to view the book catalog."}
         </DialogContentText>
       </DialogContent>

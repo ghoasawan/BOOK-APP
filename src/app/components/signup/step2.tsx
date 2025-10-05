@@ -31,6 +31,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
   const router = useRouter();
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+  const [message, setMessage]=useState("")
 
   const SignupSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -90,9 +91,11 @@ export default function Step2({ formData, setFormData }: step2Props) {
 
         if (error.response) {
           setError(error.response.data.error || "Something went wrong");
+          setMessage("Oops! This email is already taken, please change the email to proceed further.Thankyou!!")
           setOpen(true);
         } else {
           setError("Network error or server is not responding");
+          setMessage("oops! Something went wrong. Network error or server is not responding")
           setOpen(true);
         }
       }
@@ -107,7 +110,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
     <div className="flex justify-center items-center min-h-[calc(100vh-100px)] pt-[30px] sm:pt-[35px] md:pt-[40px] px-4 sm:px-6 md:px-8 pb-6">
       {error ? (
         <>
-          <AlertDialog open={open} setOpen={setOpen} data={error} />
+          <AlertDialog open={open} setOpen={setOpen} error={error} message={message} />
         </>
       ) : (
         ""
@@ -216,11 +219,16 @@ export default function Step2({ formData, setFormData }: step2Props) {
           </div>
 
           <Button
+            loadingPosition="end"
             loading={formik.isSubmitting}
             type="submit"
             variant="contained"
-            disabled={!formik.dirty || formik.isSubmitting}
-            className={`w-full !bg-purple-800 !mb-[10px] !mt-[15px] text-sm sm:text-base`}
+            className={`w-full !bg-purple-800 !mb-[10px] !mt-[15px] text-sm sm:text-base !text-white !cursor-pointer`}
+            sx={{
+              "& .MuiCircularProgress-root": {
+                color: "white",
+              },
+            }}
           >
             SignUp
           </Button>
