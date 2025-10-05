@@ -9,24 +9,26 @@ export async function GET(req: NextRequest) {
 
     const page = parseInt(searchParams.get("page") || "1");
     const limit = parseInt(searchParams.get("limit") || "10");
-     const searchQuery = searchParams.get("search") || "";
+    const searchQuery = searchParams.get("search") || "";
 
     const skip = (page - 1) * limit;
-     const whereClause = searchQuery
+    const whereClause = searchQuery
       ? {
           title: {
             contains: searchQuery,
-            mode: "insensitive" as const, // Case-insensitive search
+            mode: "insensitive" as const,
           },
         }
       : {};
 
     const books = await prisma.book.findMany({
-      where:whereClause,
+      where: whereClause,
       skip,
       take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
     });
-
     const totalBooks = await prisma.book.count();
     const totalPages = Math.ceil(totalBooks / limit);
 
@@ -106,7 +108,7 @@ export async function POST(req: NextRequest) {
         rating: rating ? parseFloat(rating) : null,
         pages: pages ? parseInt(pages) : null,
         description: description?.trim() || null,
-        coverPhoto: coverPhotoUrl, 
+        coverPhoto: coverPhotoUrl,
       },
     });
 
