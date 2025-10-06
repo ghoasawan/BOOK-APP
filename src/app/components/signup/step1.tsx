@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 
-export default function Step1({ formData, setFormData }) {
+export default function Step1({ formData, setFormData }: any) {
   const fileRef = useRef(null);
   const [userPic, setUserPic] = useState("");
 
