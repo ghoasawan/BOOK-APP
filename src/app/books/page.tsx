@@ -29,7 +29,7 @@ export default function Books() {
       dispatch(showLoader());
         setLoading(true);
       try {
-        const response = await axios.get(`${process.env.NEXTAUTH_URL}/api/books`, {
+        const response = await axios.get(`/api/books`, {
         params: { page: pages, limit: 9 },
       });
       console.log("response", response);

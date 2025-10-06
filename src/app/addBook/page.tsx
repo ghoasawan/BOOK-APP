@@ -85,7 +85,7 @@ export default function AddBookForm() {
 
       try {
         const response = await axios.post(
-          `${process.env.NEXTAUTH_URL}/api/books`,
+          `/api/books`,
           formData,
           {
             headers: {
