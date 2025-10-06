@@ -9,9 +9,15 @@ import Badge from "@mui/material/Badge";
 import { useWizard } from "react-use-wizard";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { SignupFormData } from "@/types/signup";
 
 
-export default function Step1({ formData, setFormData }: any) {
+type Step1Props = {
+  formData: SignupFormData;
+  setFormData: React.Dispatch<React.SetStateAction<SignupFormData>>;
+};
+
+export default function Step1({ formData, setFormData }: Step1Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [userPic, setUserPic] = useState("");
 
@@ -24,21 +30,23 @@ export default function Step1({ formData, setFormData }: any) {
   const {nextStep} = useWizard();
 
   const SignupSchema = Yup.object().shape({
-    profilePic: Yup.mixed()
-      .test("fileType", "Only image files are allowed", (value: any) => {
-        return value && value.type.startsWith("image/");
+    profilePic: Yup.mixed<File | string>()
+      .test("fileType", "Only image files are allowed", (value) => {
+        if (!value) return true;
+        if (typeof value === "string") return true;
+        return value.type.startsWith("image/");
       }),
   });
 
   const initialValues = {
     profilePic: "",
   };
-  const formik = useFormik({
+  const formik = useFormik<typeof initialValues>({
     initialValues,
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       console.log("values",values);
-      setFormData((prev:object)=>({...prev,...values}))
+      setFormData((prev)=>({...prev,...values}))
       nextStep()
     },
   });
@@ -86,7 +94,7 @@ export default function Step1({ formData, setFormData }: any) {
               }}
             />
           </Badge>
-          { (formik.errors.profilePic && formik.touched )? <span className="text-[12px] sm:text-[13px] md:text-[14px] text-red-600">{formik.errors.profilePic}</span>:"" }
+          { (formik.errors.profilePic && formik.touched.profilePic )? <span className="text-[12px] sm:text-[13px] md:text-[14px] text-red-600">{formik.errors.profilePic}</span>:"" }
           <Button
             type="submit"
             variant="contained"

@@ -12,14 +12,9 @@ import { useWizard } from "react-use-wizard";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import AlertDialog from "../Prompt/page";
+import { SignupFormData } from "@/types/signup";
 
-interface formValues {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+type formValues = SignupFormData;
 
 interface step2Props {
   formData: formValues;
