@@ -42,7 +42,7 @@ export default function Header() {
     router.push("/");
   }
 
-  function handleBook(id) {
+  function handleBook(id: any) {
     setSearch("");
     setSearchBooks([]);
     router.push(`/books/${id}`);
@@ -100,7 +100,7 @@ export default function Header() {
           <div className="w-full  py-[10px] ">
             {searchBooks.length > 0 ? (
               <ul className="divide-y divide-gray-100">
-                {searchBooks.map((data, index) => (
+                {searchBooks.map((data: any, index) => (
                   <li
                     className="px-[20px] hover:bg-gray-300 cursor-pointer"
                     onClick={() => {
