@@ -11,7 +11,7 @@ import { showLoader, hideLoader } from "@/app/redux/reducers/loaderSlice";
 
 export default function Page({ params }: { params: { id: string } }) {
   const [openDialogue, setOpenDialogue] = useState(false);
-  const [book, setBook] = useState({});
+  const [book, setBook] = useState<any>({});
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
