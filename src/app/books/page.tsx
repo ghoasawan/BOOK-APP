@@ -16,7 +16,7 @@ export default function Books() {
   const [pages, setPages] = useState(1);
   const [totalPage, setTotalPages] = useState(0);
   const [books, setBooks] = useState([]);
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession<any>();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const path=usePathname();
@@ -57,7 +57,7 @@ export default function Books() {
     }
   },[])
 
-  function handleBook(id)
+  function handleBook(id: number)
   {
     router.push(`/books/${id}`)
     
@@ -66,7 +66,7 @@ export default function Books() {
     <>
     {(loading)? (<Loader/>):(<div className="min-h-[100vh] bg-black flex flex-col justify-center items-end">
       <div className="w-full  flex justify-center items-center gap-[50px] flex-wrap  py-[100px] px-[100px] ">
-        {books.map((data, index) => {
+        {books.map((data : any, index) => {
           return (
             <div key={index} onClick={()=>{handleBook(data.id)}}>
               <Card
