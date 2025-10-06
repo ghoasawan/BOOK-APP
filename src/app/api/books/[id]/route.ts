@@ -3,6 +3,20 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
 import { prisma } from "../../../lib/prisma";
 
+function withCors(response: NextResponse) {
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET,DELETE,OPTIONS");
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+  return response;
+}
+
+export async function OPTIONS() {
+  return withCors(new NextResponse(null, { status: 204 }));
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }>}
@@ -11,19 +25,19 @@ export async function DELETE(
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Unauthorized - Please login to delete books" },
         { status: 401 }
-      );
+      ));
     }
 
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Book ID is required" },
         { status: 400 }
-      );
+      ));
     }
 
     const ID= Number(id);
@@ -32,7 +46,7 @@ export async function DELETE(
     });
 
     if (!existingBook) {
-      return NextResponse.json({ error: "Book not found" }, { status: 404 });
+      return withCors(NextResponse.json({ error: "Book not found" }, { status: 404 }));
     }
 
     
@@ -40,16 +54,16 @@ export async function DELETE(
       where: { id:ID },
     });
 
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { message: "Book deleted successfully" },
       { status: 200 }
-    );
+    ));
   } catch (error) {
     console.error("Error deleting book:", error);
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { error: "Failed to delete book" },
       { status: 500 }
-    );
+    ));
   }
 }
 
@@ -63,19 +77,19 @@ export async function GET(
     const session = await getServerSession(authOptions);
 
     if (!session) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Unauthorized access" },
         { status: 401 }
-      );
+      ));
     }
 
     const { id } = await params;
 
     if (!id) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Book ID is required" },
         { status: 400 }
-      );
+      ));
     }
 
     const ID = Number(id);
@@ -84,18 +98,18 @@ export async function GET(
     });
 
     if (!existingBook) {
-      return NextResponse.json({ error: "Book not Found" }, { status: 404 });
+      return withCors(NextResponse.json({ error: "Book not Found" }, { status: 404 }));
     } else {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { message: "Book Found", data: existingBook },
         { status: 200 }
-      );
+      ));
     }
   } catch (error) {
     console.error("server error", error);
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { error: "Failed to delete book" },
       { status: 500 }
-    );
+    ));
   }
 }

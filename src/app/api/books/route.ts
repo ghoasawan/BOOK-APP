@@ -3,6 +3,20 @@ import { prisma } from "../../lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 
+function withCors(response: NextResponse) {
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  response.headers.set(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+  return response;
+}
+
+export async function OPTIONS() {
+  return withCors(new NextResponse(null, { status: 204 }));
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -32,7 +46,7 @@ export async function GET(req: NextRequest) {
     const totalBooks = await prisma.book.count();
     const totalPages = Math.ceil(totalBooks / limit);
 
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       {
         page,
         limit,
@@ -41,13 +55,13 @@ export async function GET(req: NextRequest) {
         data: books,
       },
       { status: 200 }
-    );
+    ));
   } catch (error) {
     console.error("Server Error while fetching books:", error);
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { error: "Server error fetching books" },
       { status: 500 }
-    );
+    ));
   }
 }
 
@@ -56,10 +70,10 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Unauthorized User, Please login to add books" },
         { status: 401 }
-      );
+      ));
     }
 
     const formData = await req.formData();
@@ -73,24 +87,24 @@ export async function POST(req: NextRequest) {
     const coverPhoto = formData.get("coverPhoto") as File | null;
 
     if (!title || !author || !genre) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Title, author, and genre are required" },
         { status: 400 }
-      );
+      ));
     }
 
     if (rating && (+rating < 0 || +rating > 5)) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Rating must be between 0 and 5" },
         { status: 400 }
-      );
+      ));
     }
 
     if (pages && +pages < 1) {
-      return NextResponse.json(
+      return withCors(NextResponse.json(
         { error: "Pages must be at least 1" },
         { status: 400 }
-      );
+      ));
     }
 
     let coverPhotoUrl: string | null = null;
@@ -112,15 +126,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { message: "Book added successfully", book },
       { status: 201 }
-    );
+    ));
   } catch (error) {
     console.error("Error creating book:", error);
-    return NextResponse.json(
+    return withCors(NextResponse.json(
       { error: "Failed to create book" },
       { status: 500 }
-    );
+    ));
   }
 }

@@ -24,7 +24,7 @@ export default function Page({ params }: { params: { id: string } }) {
         const { id } = params;
         console.log("id", id);
         const response = await axios.get(
-          `http://localhost:3000/api/books/${id}`
+          `${process.env.NEXTAUTH_URL}/api/books/${id}`
         );
         if (response) {
           console.log("bookData", response);

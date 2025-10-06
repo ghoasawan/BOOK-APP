@@ -69,7 +69,7 @@ export default function Step2({ formData, setFormData }: step2Props) {
         setFormData(newFormData);
 
         const response = await axios.post(
-          "http://localhost:3000/api/signup",
+          `${process.env.NEXTAUTH_URL}/api/signup`,
           newFormData,
           {
             headers: {
