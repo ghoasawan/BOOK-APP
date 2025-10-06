@@ -65,7 +65,7 @@ export default function Step1({ formData, setFormData }: any) {
             onClick={handleFile}
           >
             <div className="w-[120px] h-[120px] sm:w-[140px] sm:h-[140px] md:w-[150px] md:h-[150px] border-1 border-dashed rounded-full border-gray-500 overflow-hidden">
-              { userPic && (<img src={userPic} alt="" srcset="" className=" h-[100%] w-[100%] object-cover " /> )}
+              { userPic && (<img src={userPic} alt="" className="h-[100%] w-[100%] object-cover " /> )}
             </div>
             <input
               type="file"
